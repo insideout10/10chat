@@ -14,7 +14,7 @@ function ioch_admin_menu() {
         __( '10chat', IOCH_LANGUAGE_DOMAIN ),
         __( '10chat', IOCH_LANGUAGE_DOMAIN ),
         'manage_options',
-        '10chat',
+        IOCH_OPTIONS_PAGE_SLUG,
         'ioch_admin_options_page'
     );
 
@@ -25,14 +25,38 @@ add_action( 'admin_menu', 'ioch_admin_menu' );
  * Display the 10chat options page.
  */
 function ioch_admin_options_page() {
-    ?>
+
+    // The list of sections.
+    $sections = array(
+        IOCH_OPTIONS_SETTINGS_ROOMS  => __( 'Rooms', IOCH_LANGUAGE_DOMAIN ),
+        IOCH_OPTIONS_SETTINGS_SERVER => __( 'Server', IOCH_LANGUAGE_DOMAIN )
+    );
+
+    // Set th active section.
+    $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : key( $sections );
+?>
+
     <div class="wrap">
         <h2><?php esc_html_e( '10chat Options', IOCH_LANGUAGE_DOMAIN ) ?></h2>
+
+        <h2 class="nav-tab-wrapper">
+<?php
+
+    // Print the tabs titles.
+    foreach ( $sections as $key => $value ) {
+
+        echo '<a href="?page=' . IOCH_OPTIONS_PAGE_SLUG . '&tab=' . $key . '" class="nav-tab ' .
+            ( $active_tab === $key ? 'nav-tab-active' : '' ) . '">' . esc_html( $value ) . '</a>';
+    }
+?>
+        </h2>
+
         <form action="options.php" method="POST">
-            <?php settings_fields( '10chat' ); ?>
-            <?php do_settings_sections( '10chat' ); ?>
+            <?php settings_fields( $active_tab ); ?>
+            <?php do_settings_sections( $active_tab ); ?>
             <?php submit_button(); ?>
         </form>
+
     </div>
 <?php
 }
@@ -43,22 +67,22 @@ function ioch_admin_options_page() {
 function ioch_admin_settings() {
 
     // Register the settings.
-    register_setting( '10chat', IOCH_SETTINGS );
+    register_setting( IOCH_OPTIONS_SETTINGS_SERVER, IOCH_SETTINGS );
 
     // Add the general section.
     add_settings_section(
         'ioch_settings_section',
         'General settings',
         'ioch_admin_settings_section_callback',
-        '10chat'
+        IOCH_OPTIONS_SETTINGS_SERVER
     );
 
     // Add the general section.
     add_settings_section(
         'ioch_settings_chat_section',
         'Chat',
-        'ioch_admin_settings_chat_section_callback',
-        '10chat'
+        'ioch_admin_settings_rooms_section_callback',
+        IOCH_OPTIONS_SETTINGS_ROOMS
     );
 
     // Add the field for Application Key.
@@ -66,7 +90,7 @@ function ioch_admin_settings() {
         IOCH_SETTINGS_SERVER_URL,
         __( 'Server URL', IOCH_LANGUAGE_DOMAIN ),
         'ioch_admin_settings_input_text',
-        '10chat',
+        IOCH_OPTIONS_SETTINGS_SERVER,
         'ioch_settings_section',
         array(
             'name'    => IOCH_SETTINGS_SERVER_URL,
@@ -79,7 +103,7 @@ function ioch_admin_settings() {
         IOCH_SETTINGS_APPLICATION_KEY,
         __( 'Application Key', IOCH_LANGUAGE_DOMAIN ),
         'ioch_admin_settings_input_text',
-        '10chat',
+        IOCH_OPTIONS_SETTINGS_SERVER,
         'ioch_settings_section',
         array(
             'name'    => IOCH_SETTINGS_APPLICATION_KEY,
@@ -89,14 +113,14 @@ function ioch_admin_settings() {
 
     // Add the field for default OTP TTL.
     add_settings_field(
-        IOCH_SETTINGS_OTP_TTL_SECS,
-        __( 'One-Time Passwords Default TTL (in secs)', IOCH_LANGUAGE_DOMAIN ),
+        IOCH_SETTINGS_APPLICATION_SECRET,
+        __( 'Application Secret', IOCH_LANGUAGE_DOMAIN ),
         'ioch_admin_settings_input_text',
-        '10chat',
+        IOCH_OPTIONS_SETTINGS_SERVER,
         'ioch_settings_section',
         array(
-            'name'    => IOCH_SETTINGS_OTP_TTL_SECS,
-            'default' => 60
+            'name'    => IOCH_SETTINGS_APPLICATION_SECRET,
+            'default' => ''
         )
     );
 
@@ -114,47 +138,9 @@ function ioch_admin_settings_section_callback() {
 
 }
 
-/**
- *
- */
-function ioch_admin_settings_chat_section_callback() {
+function ioch_admin_settings_rooms_section_callback() {
 
-    // Enqueue the scripts.
-    wp_enqueue_script( 'sockjs', plugin_dir_url( __FILE__ ) . 'js/sockjs-0.3.4.js' );
-    wp_enqueue_script( 'stomp', plugin_dir_url( __FILE__ ) . 'js/stomp.min.js' );
-    wp_enqueue_script( '10chat-js', plugin_dir_url( __FILE__ ) . 'js/10chat.js', array( 'jquery-ui-draggable' ) );
-    wp_enqueue_style( '10chat-css', plugin_dir_url( __FILE__ ) . 'css/10chat.css' );
-
-
-    $user    = wp_get_current_user();
-    $app_key = ioch_get_option( IOCH_SETTINGS_APPLICATION_KEY );
-    wp_localize_script( '10chat', 'ioch_options', array(
-        'server_url' => ioch_get_option( IOCH_SETTINGS_SERVER_URL ),
-        'user'       => array(
-            'username'    => $user->user_login,
-            'displayName' => $user->display_name,
-            'roles'       => $user->roles
-        )
-    ) );
-
-?>
-
-    <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-            enabled. Please enable
-            Javascript and reload this page!</h2></noscript>
-    <div>
-        <div>
-            <button type="button" id="connect" onclick="iochat.connect();">Connect</button>
-            <button type="button" id="disconnect" disabled="disabled" onclick="iochat.disconnect();">Disconnect</button>
-        </div>
-        <div id="conversationDiv">
-            <label>Content?</label><input type="text" id="content"/>
-            <button type="button" id="sendContent" onclick="iochat.sendContent();">Send</button>
-            <p id="response"></p>
-        </div>
-    </div>
-
-<?php
+    var_dump( ioch_api_call( '/1/rooms' ) );
 
 }
 

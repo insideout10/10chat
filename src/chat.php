@@ -18,6 +18,9 @@ require_once( 'chat_log.php' );
 // Add configuration functions.
 require_once( 'chat_config.php' );
 
+// Add support for API calls.
+require_once( 'chat_api.php' );
+
 // Add ajax authenticate method.
 require_once( 'ajax/chat_ajax_authenticate.php' );
 
@@ -79,4 +82,4 @@ function ioch_init() {
     ) );
 
 }
-add_action( 'init', 'ioch_init' );
+add_action( 'wp_head', 'ioch_init' );
