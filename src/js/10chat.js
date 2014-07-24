@@ -7,7 +7,7 @@ jQuery( function( $ ) {
     $('body')
         .append('<div class="ozchat-container">' +
                     '<div id="' + id + '">' +
-                        '<div class="ozchat-notifier"></div>' +
+                        '<div class="ozchat-notifier">3+</div>' +
                     '</div>' +
                     '<div class="ozchat-messages">' +
                         '<div id="ozchat-read-messages"></div>' +
@@ -97,9 +97,7 @@ iochat.sendContent = function ( content ) {
 };
 
 iochat.showGreeting = function (message) {
-    var response = document.getElementById('ozchat-read-messages');
-    var p = document.createElement('p');
-    p.style.wordWrap = 'break-word';
-    p.appendChild(document.createTextNode(message));
-    response.appendChild(p);
+    jQuery('#ozchat-read-messages')
+        .append( '<p>' + message + '</p>' )
+        .scrollTop( jQuery('#ozchat-read-messages')[0].scrollHeight );
 };

@@ -12,24 +12,27 @@
 .ozchat-container.expand .ozchat-messages {
     display: block;
     width: 200px;
-    height: 400px;
     background: white;
     border: 1px solid gray;
     margin-top: -8px;
-    /*margin-left: -120px;*/
-    border-radius: 10px;
     position: relative;
+    overflow: auto;
+    height: 350px;
 }
 
 .ozchat-container.expand .ozchat-messages .ozchat-write-message {
     width: 200px;
     height: 40px;
-    bottom: 12px;
-    position: absolute;
 }
 
-.ozchat-container.expand .ozchat-messages .ozchat-read-messages {
+.ozchat-container.expand .ozchat-messages #ozchat-read-messages {
     padding: 4px;
+    height: 300px;
+    overflow: auto;
+}
+
+.ozchat-container.expand .ozchat-messages #ozchat-read-messages p {
+    margin: 0 0 2px 0;
 }
 
 .ozchat-container.expand .ozchat-write-message input[type="text"], .ozchat-container.expand .ozchat-write-message button {
