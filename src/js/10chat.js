@@ -1,12 +1,67 @@
+jQuery( function( $ ) {
+
+    var id   = 'ozchat-chat';
+    var send = 'Send';
+
+
+    $('body')
+        .append('<div class="ozchat-container">' +
+                    '<div id="' + id + '">' +
+                        '<div class="ozchat-notifier"></div>' +
+                    '</div>' +
+                    '<div class="ozchat-messages">' +
+                        '<div id="ozchat-read-messages"></div>' +
+                        '<div class="ozchat-write-message"><input type="text" name="message"><button type="button">' + send +
+                            '</button></div>' +
+                    '</div>' +
+                '</div>');
+
+    $('.ozchat-container')
+        .draggable({
+            start: function() {
+                $( '#ozchat-chat').addClass( 'dragging' );
+            }
+        });
+
+    $('#ozchat-chat')
+        .click( function() {
+            if ( $( '#ozchat-chat').hasClass( 'dragging' ) ) {
+                $( '#ozchat-chat').removeClass( 'dragging' );
+            } else {
+                $('.ozchat-container').toggleClass( 'expand' );
+            }
+        } );
+
+    $('.ozchat-container button')
+        .click( function() {
+            var input = $('.ozchat-container input');
+            iochat.sendContent( input.val() );
+            input.val('');
+        } );
+
+    $('.ozchat-container input')
+        .keypress(function (e) {
+            if (e.which == 13) {
+                var input = $('.ozchat-container input');
+                iochat.sendContent( input.val() );
+                input.val('');
+                e.preventDefault();
+            }
+        });
+
+    // Connect
+    iochat.connect();
+} );
+
 window.iochat = {}
 
 iochat.stompClient = null;
 
 iochat.setConnected = function (connected) {
-    document.getElementById('connect').disabled = connected;
-    document.getElementById('disconnect').disabled = !connected;
-    document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
-    document.getElementById('response').innerHTML = '';
+//    document.getElementById('connect').disabled = connected;
+//    document.getElementById('disconnect').disabled = !connected;
+//    document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
+//    document.getElementById('response').innerHTML = '';
 };
 
 iochat.connect = function () {
@@ -37,15 +92,12 @@ iochat.disconnect = function () {
     console.log("Disconnected");
 };
 
-iochat.sendContent = function () {
-    var content = document.getElementById('content').value;
-    iochat.stompClient.send("/in/my-app/my-room", {}, JSON.stringify({
-        'content': content
-    }));
+iochat.sendContent = function ( content ) {
+    iochat.stompClient.send("/in/my-app/my-room", {}, JSON.stringify({ 'content': content }));
 };
 
 iochat.showGreeting = function (message) {
-    var response = document.getElementById('response');
+    var response = document.getElementById('ozchat-read-messages');
     var p = document.createElement('p');
     p.style.wordWrap = 'break-word';
     p.appendChild(document.createTextNode(message));

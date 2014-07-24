@@ -56,3 +56,27 @@ function ioch_plugins_url( $url, $path, $plugin )
     return $plugin_url;
 }
 add_filter( 'plugins_url', 'ioch_plugins_url', 10, 3 );
+
+
+function ioch_init() {
+
+    // Enqueue the scripts.
+    wp_enqueue_script( 'sockjs', plugin_dir_url( __FILE__ ) . 'js/sockjs-0.3.4.js' );
+    wp_enqueue_script( 'stomp', plugin_dir_url( __FILE__ ) . 'js/stomp.min.js' );
+    wp_enqueue_script( 'ozchat-js', plugin_dir_url( __FILE__ ) . 'js/10chat.js', array( 'jquery-ui-draggable' ) );
+    wp_enqueue_style( 'ozchat-css', plugin_dir_url( __FILE__ ) . 'css/10chat.css' );
+
+
+    $user    = wp_get_current_user();
+
+    wp_localize_script( 'ozchat-js', 'ioch_options', array(
+        'server_url' => ioch_get_option( IOCH_SETTINGS_SERVER_URL ),
+        'user'       => array(
+            'username'    => $user->user_login,
+            'displayName' => $user->display_name,
+            'roles'       => $user->roles
+        )
+    ) );
+
+}
+add_action( 'init', 'ioch_init' );
