@@ -1,9 +1,4 @@
 <?php
-/*  Copyright 2014  InsideOut10  (email : info@insideout.io) */
-
-// Add logging functions.
-require_once( 'chat_log.php' );
-
 /**
  * Plugin Name: 10chat
  * Plugin URI: http://insideout.io
@@ -11,32 +6,53 @@ require_once( 'chat_log.php' );
  * Version: 1.0.0-SNAPSHOT
  * Author: InsideOut10
  * Author URI: http://insideout.io
- * License: copyright 2014, InsideOut10
+ * License: GPL
  */
 
-function ioch_ajax_authenticate() {
+// Add constants.
+require_once( 'chat_constants.php' );
 
-    // Check that the required parameters are provided.
-    if ( !isset( $_POST['username'] ) || empty( $_POST['username'] ) ) {
-        wp_die('The username parameter is required.');
-    }
+// Add logging functions.
+require_once( 'chat_log.php' );
 
-    if ( !isset( $_POST['otp'] ) || empty( $_POST['otp'] ) ) {
-        wp_die('The otp parameter is required.');
-    }
+// Add configuration functions.
+require_once( 'chat_config.php' );
 
-    // Get the username and the OTP.
-    $username = $_POST['username'];
-    $otp      = $_POST['otp'];
+// Add ajax authenticate method.
+require_once( 'ajax/chat_ajax_authenticate.php' );
 
+// Admin files.
+require_once( 'admin/chat_admin_settings.php' );
+
+
+/**
+ * Change *plugins_url* response to return the correct path of 10chat files when working in development mode.
+ *
+ * @param string $url    The URL as set by the plugins_url method.
+ * @param string $path   The request path.
+ * @param string $plugin The plugin folder.
+ * @return string The URL.
+ */
+function ioch_plugins_url( $url, $path, $plugin )
+{
     ioch_write_log(
-        'Authenticating [ username :: {username} ][ otp :: {otp} ]',
-        array( 'username' => $username, 'otp' => $otp )
+        "ioch_plugins_url [ url :: {url} ][ path :: {path} ][ plugin :: {plugin} ]",
+        array( 'url' => $url, 'path' => $path, 'plugin' => $plugin )
     );
 
-    // TODO: authenticate the user.
+    // Check if it's our pages calling the plugins_url.
+    if ( 1 !== preg_match( '/\/chat_[^.]*.php$/i', $plugin ) ) {
+        return $url;
+    };
 
-    wp_die();
+    // Set the URL to plugins URL + helixware, in order to support the plugin being symbolic linked.
+    $plugin_url = plugins_url() . '/10chat/' . $path;
 
+    ioch_write_log(
+        'ioch_plugins_url [ match :: yes ][ plugin url :: {plugin-url} ][ url :: {url} ][ path :: {path} ][ plugin :: {plugin} ]',
+        array( 'plugin-url', $plugin_url, 'url' => $url, 'path' => $path, 'plugin' => $plugin )
+    );
+
+    return $plugin_url;
 }
-add_action( 'wp_ajax_nopriv_ioch_authenticate', 'ioch_ajax_authenticate' );
+add_filter( 'plugins_url', 'ioch_plugins_url', 10, 3 );
