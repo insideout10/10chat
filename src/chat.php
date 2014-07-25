@@ -85,4 +85,4 @@ function ioch_init() {
     ) );
 
 }
-add_action( 'wp_head', 'ioch_init' );
+//add_action( 'wp_head', 'ioch_init' );

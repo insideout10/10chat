@@ -74,6 +74,13 @@ angular.module( 'ozchat', [] )
                 $scope.refresh(); } );
         };
 
+        /**
+         * Open a widget on the room (requires jQuery and the ozchat widget).
+         *
+         * @param room The room.
+         */
+        $scope.open = function( room ) { jQuery('<div></div>').appendTo('body').ozchat( { room: room.name } ); }
+
         // Refresh the rooms.
         $scope.refresh();
 
