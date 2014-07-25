@@ -94,12 +94,12 @@ jQuery( function ( $ ) {
 
         _create: function () {
 
-            var that = this;
-
+            var that       = this;
+            var unread     = 0;
             var $container = this.element;
 
             // Create the chat notifier.
-            var $chat      = $( '<div class="ozchat-chat"><div class="ozchat-notifier">3+</div></div>' );
+            var $chat      = $( '<div class="ozchat-chat"><div class="ozchat-notifier"></div></div>' );
 
             // Create the messages panel.
             var $messages   = $(
@@ -121,6 +121,7 @@ jQuery( function ( $ ) {
                 } );
 
             // Create some references to commonly used elements.
+            $notifier     = $chat.children( '.ozchat-notifier' );
             $readmessages = $messages.children( '.ozchat-read-messages' );
             $textarea     = $container.find( 'textarea' )
 
@@ -176,6 +177,9 @@ jQuery( function ( $ ) {
                 $readmessages
                     .append( '<p class="' + cls +  '">' + params.content + '</p>' )
                     .scrollTop( $messages[0].scrollHeight );
+
+                // TODO: manage the unread messages.
+                $notifier.html( 9 < ++unread ? '9+' : unread );
 
             };
 
