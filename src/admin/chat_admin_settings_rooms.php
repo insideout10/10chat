@@ -60,7 +60,8 @@ function ioch_admin_settings_rooms_section_callback() {
                 </td>
             </tr>
             <tr ng-class="$odd ? 'alternate' : ''" ng-repeat="room in rooms">
-                <td><div ng-bind="room.name">my-room</div> <button type="button" ng-click="open(room);"><?php echo $label_open_h; ?></button></td>
+                <td><span ng-bind="room.name">my-room</span> <span ng-click="open(room);" class="ozchat-open-chat dashicons dashicons-admin-comments"></span>
+                </td>
                 <td ng-bind="room.moderated">no</td>
             </tr>
         </tbody>

@@ -188,7 +188,7 @@ jQuery( function ( $ ) {
                     .scrollTop( $messages[0].scrollHeight );
 
                 // Update the notifier if the panel has no focus.
-                if ( ! $container.hasClass( 'expand' ) ) {
+                if ( ! $container.hasClass( 'expand' ) && 'ozchat-system' !== params.cls ) {
                     $notifier
                         .html( 9 < ++unread ? '9+' : unread )
                         .show();

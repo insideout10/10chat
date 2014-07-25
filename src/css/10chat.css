@@ -37,7 +37,9 @@
 }
 
 .ozchat-container.expand .ozchat-messages .ozchat-read-messages p.ozchat-system {
-    color: gray;
+    color: lightgray;
+    font-style: italic;
+    font-size: 10px;
 }
 
 .ozchat-container.expand .ozchat-textbox {
@@ -93,4 +95,9 @@
     text-align: center;
     line-height: 20px;
     margin: 30px;
+    display: none;
+}
+
+.ozchat-open-chat {
+    cursor: pointer;
 }
