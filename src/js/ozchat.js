@@ -117,23 +117,32 @@ jQuery( function ( $ ) {
                 .append( $chat )
                 .append( $messages )
                 .draggable( {
-                    start: function() { $chat.addClass( 'dragging' ); }
+                    start   : function() { $chat.addClass( 'dragging' ); },
+                    handle  : '.ozchat-chat',
+                    appendTo: 'body'
                 } );
 
             // Create some references to commonly used elements.
-            $notifier     = $chat.children( '.ozchat-notifier' );
-            $readmessages = $messages.children( '.ozchat-read-messages' );
-            $textarea     = $container.find( 'textarea' )
+            var $notifier     = $chat.children( '.ozchat-notifier' );
+            var $readmessages = $messages.children( '.ozchat-read-messages' );
+            var $textarea     = $messages.children( '.ozchat-textbox').children( 'textarea' );
 
             // Make the messages pane resizable.
-            $messages.resizable();
+            $messages.resizable( { alsoResize: $container, minWidth: 200, minHeight: 300 } );
 
             // Open/close the messages pane when the chat circle is clicked.
             $chat.click( function() {
-                if ( $chat.hasClass( 'dragging' ) )
+                if ( $chat.hasClass( 'dragging' ) ) {
                     $chat.removeClass( 'dragging' );
-                else
+                } else {
                     $container.toggleClass( 'expand' );
+
+                    // Hide the notifier.
+                    if ( $container.hasClass( 'expand' ) ) {
+                        $notifier.hide();
+                        unread = 0;
+                    }
+                }
 
             } );
 
@@ -143,8 +152,8 @@ jQuery( function ( $ ) {
                 if ( e.ctrlKey &&  e.which == 13 ) {
 
                     // Get the element, send the content using the *ozchat* reference.
-                    ozchat.send( $textarea.val(), that.options.room );
-                    $textarea.val('');
+                    ozchat.send( $(e.target).val(), that.options.room );
+                    $(e.target).val('');
 
                     e.preventDefault();
 
@@ -178,8 +187,12 @@ jQuery( function ( $ ) {
                     .append( '<p class="' + cls +  '">' + params.content + '</p>' )
                     .scrollTop( $messages[0].scrollHeight );
 
-                // TODO: manage the unread messages.
-                $notifier.html( 9 < ++unread ? '9+' : unread );
+                // Update the notifier if the panel has no focus.
+                if ( ! $container.hasClass( 'expand' ) ) {
+                    $notifier
+                        .html( 9 < ++unread ? '9+' : unread )
+                        .show();
+                }
 
             };
 
@@ -191,6 +204,8 @@ jQuery( function ( $ ) {
 
                 ozchat.subscribe( 'my-app', that.options.room, function ( e ) {
 
+                    console.log(that.options.room);
+                    console.log(e);
                     appendMessage( { content: JSON.parse(e.body).content } );
 
                 } );

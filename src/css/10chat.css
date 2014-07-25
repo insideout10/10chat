@@ -3,6 +3,7 @@
     right: 10px;
     top: 10px;
     z-index: 999999;
+    width: 200px;
 }
 
 .ozchat-container .ozchat-messages {
@@ -12,13 +13,13 @@
 
 .ozchat-container.expand .ozchat-messages {
     display: block;
-    width: 300px;
+    width: 200px;
     background: white;
     border: 1px solid gray;
     margin-top: 10px;
     position: relative;
     overflow: hidden;
-    height: 350px;
+    height: 300px;
 }
 
 .ozchat-container.expand .ozchat-messages .ozchat-read-messages {
@@ -78,10 +79,10 @@
     border-radius: 50%;
     border: 1px solid gray;
     cursor: pointer;
-    margin-left: 260px;
+    margin-left: 140px;
 }
 
-.ozchat-chat .ozchat-notifier {
+.ozchat-container .ozchat-chat .ozchat-notifier {
     width: 20px;
     height: 20px;
     background: red;
