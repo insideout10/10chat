@@ -2,6 +2,8 @@
 /**
  */
 
+// Add support for rooms.
+require_once( 'chat_admin_settings_rooms.php' );
 
 /**
  * Create a menu entry in WordPress *Settings* menu.
@@ -135,12 +137,6 @@ function ioch_admin_settings_section_callback() {
     echo '<p>' .
         esc_html__( 'Set here the basic settings for 10chat.' ) .
         '</p>';
-
-}
-
-function ioch_admin_settings_rooms_section_callback() {
-
-    var_dump( ioch_api_call( '/1/rooms' ) );
 
 }
 
