@@ -4,13 +4,25 @@
 
 function ioch_admin_settings_rooms_section_callback() {
 
-    var_dump( ioch_api_call( '/1/rooms' ) );
+    // Enqueue required scripts and options.
+    wp_enqueue_script( 'angular-js', plugin_dir_url( __FILE__ ) . 'js/angular.min.js' );
+    wp_enqueue_script( 'ozchat-admin-js', plugin_dir_url( __FILE__ ) . 'js/ozchat.admin.js' );
+    wp_localize_script( 'ozchat-admin-js', 'ozchat_admin_options', array(
+        'server_url' => admin_url( 'admin-ajax.php' ),
+        'end_points' => array(
+            'rooms' => '?action=ioch_rooms'
+        )
+    ) );
 
+
+    // Set the labels.
     $label_name_h      = esc_html__( 'Name', IOCH_LANGUAGE_DOMAIN );
+    $label_save_h      = esc_html__( 'Save', IOCH_LANGUAGE_DOMAIN );
     $label_moderated_h = esc_html__( 'Moderated', IOCH_LANGUAGE_DOMAIN );
+
 ?>
 
-    <table class="wp-list-table widefat fixed posts">
+    <table class="wp-list-table widefat fixed posts" ng-app="ozchat" ng-controller="RoomController">
         <thead>
             <th scope="col" class="manage-column"><?php echo $label_name_h; ?></th>
             <th scope="col" class="manage-column"><?php echo $label_moderated_h; ?></th>
@@ -23,12 +35,15 @@ function ioch_admin_settings_rooms_section_callback() {
 
         <tbody id="the-list">
             <tr class="alternate">
-                <td>my-room</td>
-                <td>no</td>
+                <td><input name="name" ng-model="newRoom.name" type="text" placeholder="name"></td>
+                <td>
+                    <input name="moderated" ng-model="newRoom.moderated" type="checkbox">
+                    <button type="button" ng-click="create(newRoom);" class="button-primary save alignright"><?php echo $label_save_h; ?></button>
+                </td>
             </tr>
-            <tr>
-                <td>my-room-2</td>
-                <td>yes</td>
+            <tr ng-class="$odd ? 'alternate' : ''" ng-repeat="room in rooms">
+                <td ng-bind="room.name">my-room</td>
+                <td ng-bind="room.moderated">no</td>
             </tr>
         </tbody>
     </table>

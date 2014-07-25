@@ -2,7 +2,19 @@
 /**
  */
 
-function ioch_api_call( $endpoint, $content_type = 'application/json', $accept = 'application/json' ) {
+/**
+ * Performs a call to the remote server API.
+ *
+ * @param string $endpoint     The remote path.
+ * @param string $method       The request method (default 'GET')
+ * @param string $body         The request body.
+ * @param string $content_type The request content type (default 'application/json').
+ * @param string $accept       The request accept (default 'application/json').
+ * @return array|WP_Error The server response array or a WP_Error instance.
+ */
+function ioch_api_call( $endpoint, $method = 'GET', $body = '', $content_type = 'application/json', $accept = 'application/json' ) {
+
+    ioch_write_log( '[ endpoint :: {endpoint} ][ method :: {method} ]', array( 'endpoint' => $endpoint, 'method' => $method ) );
 
     // Get the configuration settings.
     $server_url = ioch_get_option( IOCH_SETTINGS_SERVER_URL, false );
@@ -18,12 +30,13 @@ function ioch_api_call( $endpoint, $content_type = 'application/json', $accept =
 
     // Prepare the default arguments.
     $args = array_merge_recursive( unserialize( IOCH_API_HTTP_OPTIONS ), array(
-        'method'  => 'GET',
+        'method'  => $method,
         'headers' => array(
             'Content-Type'         => $content_type,
             'Accept'               => $accept,
             'Authorization'        => 'Basic ' . base64_encode( $app_key . ':' . $app_secret )
-        )
+        ),
+        'body'    => $body
     ) );
 
     // Perform the request.
