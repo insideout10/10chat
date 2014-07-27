@@ -7,30 +7,10 @@ function ioch_admin_settings_rooms_section_callback() {
     // Enqueue required scripts and options.
     wp_enqueue_style( 'ozchat-jquery-ui-css', plugin_dir_url( __FILE__ ) . 'css/ozchat.jquery-ui.css' );
     wp_enqueue_style( 'ozchat-css', plugin_dir_url( __FILE__ ) . 'css/10chat.css' );
-    wp_enqueue_script( 'angular-js', plugin_dir_url( __FILE__ ) . 'js/angular.min.js' );
     wp_enqueue_script( 'sockjs-js', plugin_dir_url( __FILE__ ) . 'js/sockjs-0.3.4.min.js' );
     wp_enqueue_script( 'stomp-js', plugin_dir_url( __FILE__ ) . 'js/stomp.min.js' );
     wp_enqueue_script( 'angular-js', plugin_dir_url( __FILE__ ) . 'js/angular.min.js' );
     wp_enqueue_script( 'ozchat-js', plugin_dir_url( __FILE__ ) . 'js/ozchat.js', array( 'jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-draggable', 'jquery-ui-resizable' ) );
-    wp_enqueue_script( 'ozchat-admin-js', plugin_dir_url( __FILE__ ) . 'js/ozchat.admin.js' );
-
-    $user    = wp_get_current_user();
-
-    wp_localize_script( 'ozchat-admin-js', 'ozchat_admin_options', array(
-        'chat' => array(
-            'server_url' => ioch_get_option( IOCH_SETTINGS_SERVER_URL ),
-            'user'       => array(
-                'username'    => $user->user_login,
-                'displayName' => $user->display_name,
-                'roles'       => $user->roles
-            )
-        ),
-        'server_url' => admin_url( 'admin-ajax.php' ),
-        'end_points' => array(
-            'rooms' => '?action=ioch_rooms'
-        )
-    ) );
-
 
     // Set the labels.
     $label_name_h      = esc_html__( 'Name', IOCH_LANGUAGE_DOMAIN );
@@ -60,7 +40,7 @@ function ioch_admin_settings_rooms_section_callback() {
                 </td>
             </tr>
             <tr ng-class="$odd ? 'alternate' : ''" ng-repeat="room in rooms">
-                <td><span ng-bind="room.name">my-room</span> <span ng-click="open(room);" class="ozchat-open-chat dashicons dashicons-admin-comments"></span>
+                <td><span ng-bind="room.name">my-room</span> <span ng-click="open(room);" title="<?php echo $label_open_h; ?>" class="ozchat-open-chat dashicons dashicons-admin-comments"></span>
                 </td>
                 <td ng-bind="room.moderated">no</td>
             </tr>

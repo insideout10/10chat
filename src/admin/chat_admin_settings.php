@@ -5,6 +5,9 @@
 // Add support for rooms.
 require_once( 'chat_admin_settings_rooms.php' );
 
+// Add support for messages.
+require_once( 'chat_admin_settings_messages.php' );
+
 /**
  * Create a menu entry in WordPress *Settings* menu.
  *
@@ -30,12 +33,32 @@ function ioch_admin_options_page() {
 
     // The list of sections.
     $sections = array(
-        IOCH_OPTIONS_SETTINGS_ROOMS  => __( 'Rooms', IOCH_LANGUAGE_DOMAIN ),
-        IOCH_OPTIONS_SETTINGS_SERVER => __( 'Server', IOCH_LANGUAGE_DOMAIN )
+        IOCH_OPTIONS_SETTINGS_ROOMS    => __( 'Rooms', IOCH_LANGUAGE_DOMAIN ),
+        IOCH_OPTIONS_SETTINGS_MESSAGES => __( 'Messages', IOCH_LANGUAGE_DOMAIN ),
+        IOCH_OPTIONS_SETTINGS_SERVER   => __( 'Server', IOCH_LANGUAGE_DOMAIN )
     );
 
     // Set th active section.
     $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : key( $sections );
+
+
+    // Add scripts.
+    $token = ioch_api_token();  // Get an authentication token.
+    wp_enqueue_script( 'angular-js', plugin_dir_url( __FILE__ ) . 'js/angular.min.js' );
+    wp_enqueue_script( 'ozchat-admin-js', plugin_dir_url( __FILE__ ) . 'js/ozchat.admin.js' );
+    wp_localize_script( 'ozchat-admin-js', 'ozchat_admin_options', array(
+        'chat' => array(
+            'server_url' => ioch_get_option( IOCH_SETTINGS_SERVER_URL )
+        ),
+        'server_url' => admin_url( 'admin-ajax.php' ),
+        'end_points' => array(
+            'rooms'    => '?action=ioch_rooms',
+            'messages' => '?action=ioch_messages'
+        ),
+        'token' => $token->token,
+        'app'   => $token->appName
+    ) );
+
 ?>
 
     <div class="wrap">
@@ -81,10 +104,18 @@ function ioch_admin_settings() {
 
     // Add the general section.
     add_settings_section(
-        'ioch_settings_chat_section',
+        'ioch_settings_rooms_section',
         'Chat',
         'ioch_admin_settings_rooms_section_callback',
         IOCH_OPTIONS_SETTINGS_ROOMS
+    );
+
+    // Add the general section.
+    add_settings_section(
+        'ioch_settings_messages_section',
+        'Chat',
+        'ioch_admin_settings_messages_section_callback',
+        IOCH_OPTIONS_SETTINGS_MESSAGES
     );
 
     // Add the field for Application Key.

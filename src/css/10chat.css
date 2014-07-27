@@ -82,6 +82,7 @@
     border: 1px solid gray;
     cursor: pointer;
     margin-left: 140px;
+    position: relative;
 }
 
 .ozchat-container .ozchat-chat .ozchat-notifier {
@@ -100,4 +101,21 @@
 
 .ozchat-open-chat {
     cursor: pointer;
+}
+
+.ozchat-container .ozchat-messages .ozchat-read-messages .ozchat-message-from {
+    font-style: italic;
+    color: gray;
+    margin-right: 8px;
+}
+
+.ozchat-container .ozchat-chat .ozchat-room-name {
+    background: #bfbfbf;
+    width: auto;
+    white-space: nowrap;
+    border-radius: 2px;
+    position: absolute;
+    top: 4px;
+    padding: 0 4px;
+    font-weight: bold;
 }

@@ -16,6 +16,7 @@ define( 'IOCH_OPTIONS_PAGE_SLUG', 'ioch_options' );
 // The server settings (section).
 define( 'IOCH_OPTIONS_SETTINGS_SERVER', 'ioch_options_settings_server' );
 define( 'IOCH_OPTIONS_SETTINGS_ROOMS', 'ioch_options_settings_rooms' );
+define( 'IOCH_OPTIONS_SETTINGS_MESSAGES', 'ioch_options_settings_messages' );
 
 // Default (serialized) settings for HTTP calls to the server.
 define( 'IOCH_API_HTTP_OPTIONS', serialize( array(

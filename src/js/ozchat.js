@@ -2,6 +2,12 @@
 
 jQuery( function ( $ ) {
 
+    // Connect.
+    var serverURL = ozchat_admin_options.chat.server_url;
+    var token     = ozchat_admin_options.token;
+    var appName   = ozchat_admin_options.app;
+
+
     // Create the ozchat channel if it's not yet created.
     if ( undefined === ozchat ) {
 
@@ -25,31 +31,20 @@ jQuery( function ( $ ) {
                 return callback();
             }
 
-            // Connect.
-            var serverURL = ozchat_admin_options.chat.server_url;
-            var user      = ozchat_admin_options.chat.user;
-
-            $.ajax( serverURL + '/1/tokens', {
-                type       : 'POST',
-                data       : JSON.stringify( user ),
-                contentType: 'application/json',
-                error      : function() { alert( 'An error occurred.' ); },
-                success    : function ( data ) {
-
-                    var socket = new SockJS( serverURL + '/auth/' + data);
-                    ozchat.client = Stomp.over(socket);
-                    ozchat.client.connect( {}, function ( frame ) {
-
-                        // Set the first connection.
-                        ozchat.connected   = true;
-                        ozchat.connections = 1;
-
-                        callback();
-
-                    });
-
-                }
+            var socket = new SockJS( serverURL + '/auth/' + token, {}, {
+//                protocols_whitelist: ['xhr-polling']
             });
+            ozchat.client = Stomp.over(socket);
+            ozchat.client.connect( {}, function ( frame ) {
+
+                // Set the first connection.
+                ozchat.connected   = true;
+                ozchat.connections = 1;
+
+                callback();
+
+            });
+
         }
 
         /**
@@ -67,10 +62,13 @@ jQuery( function ( $ ) {
 
         /**
          * Send the specified content to the specified room.
-         * @param content
+         *
+         * @param content The message.
+         * @param app The recipient app name.
+         * @param room The recipient room.
          */
-        ozchat.send = function ( content, room ) {
-            ozchat.client.send( '/in/my-app/' + room, {}, JSON.stringify( { 'content': content } ) );
+        ozchat.send = function ( content, app, room ) {
+            ozchat.client.send( '/in/' + app + '/' + room, {}, JSON.stringify( { 'content': content } ) );
         }
 
         window.ozchat = ozchat;
@@ -84,7 +82,8 @@ jQuery( function ( $ ) {
 
         // Set up the options.
         options: {
-            room  : 'my-room',
+            app   : appName,
+            room  : 'default-room',
             labels: {
                 send        : 'Send',
                 connectingTo: 'Connecting to',
@@ -99,7 +98,12 @@ jQuery( function ( $ ) {
             var $container = this.element;
 
             // Create the chat notifier.
-            var $chat      = $( '<div class="ozchat-chat"><div class="ozchat-notifier"></div></div>' );
+            var $chat      = $(
+                '<div class="ozchat-chat">' +
+                    '<div class="ozchat-room-name">' + this.options.room + '</div>' +
+                    '<div class="ozchat-notifier"></div>' +
+                '</div>'
+            );
 
             // Create the messages panel.
             var $messages   = $(
@@ -149,23 +153,28 @@ jQuery( function ( $ ) {
             // Hook to the CTRL+Enter key of the text area.
             $textarea.keypress( function ( e ) {
 
-                if ( e.ctrlKey &&  e.which == 13 ) {
-
-                    // Get the element, send the content using the *ozchat* reference.
-                    ozchat.send( $(e.target).val(), that.options.room );
-                    $(e.target).val('');
-
-                    e.preventDefault();
-
+                if ( ! e.ctrlKey ||  13 !== e.which || '' === $(e.target).val() ) {
+                    return;
                 }
+
+                // Get the element, send the content using the *ozchat* reference.
+                ozchat.send( $(e.target).val(), that.options.app, that.options.room );
+                $(e.target).val('');
+
+                e.preventDefault();
 
             });
 
             // Hook to the button click.
             $container.find( 'button' ).click( function( e ) {
 
+                // If the text area is empty, just return.
+                if ( '' === $textarea.val() ) {
+                    return;
+                }
+
                 // Get the element, send the content using the *ozchat* reference.
-                ozchat.send( $textarea.val(), that.options.room );
+                ozchat.send( $textarea.val(), that.options.app, that.options.room );
                 $textarea.val('');
 
                 e.preventDefault();
@@ -181,10 +190,14 @@ jQuery( function ( $ ) {
              */
             var appendMessage = function ( params ) {
 
-                var cls = 'message' + ( undefined === params.cls ? '' : ' ' + params.cls );
+                var cls     = 'message' + ( undefined === params.cls ? '' : ' ' + params.cls );
+                var id      = ( undefined !== params.message.id ? params.message.id : 'noid ');
+                var content = params.message.content;
 
                 $readmessages
-                    .append( '<p class="' + cls +  '">' + params.content + '</p>' )
+                    .append( '<p id="ozchat-message-' + id + '" class="' + cls +  '">' +
+                        ( undefined !== params.message.from ? '<span class="ozchat-message-from">[' + params.message.from + ']</span>' : '' ) +
+                        '<span class="ozchat-message-content">' + content + '</span></p>' )
                     .scrollTop( $messages[0].scrollHeight );
 
                 // Update the notifier if the panel has no focus.
@@ -196,17 +209,39 @@ jQuery( function ( $ ) {
 
             };
 
+            /**
+             * Execute a command.
+             * @param command
+             */
+            var execute = function( command ) {
+                switch (command.type) {
+                    case 'DELETE':
+                        $readmessages.children( '#ozchat-message-' + command.payload).remove();
+                        break;
+                    default:
+                        alert('unknown command: ' + command.type);
+                }
+            };
+
             // Connect the *ozchat* and subscribe to the channel or, if we're already connected, .
-            appendMessage( { content: that.options.labels.connectingTo + ' ' + that.options.room, cls: 'ozchat-system' } );
+            appendMessage( { message: { content: that.options.labels.connectingTo + ' ' + that.options.room }, cls: 'ozchat-system' } );
             ozchat.connect( function() {
 
-                appendMessage( { content: that.options.labels.connectedTo + ' ' + that.options.room, cls: 'ozchat-system' } );
+                appendMessage( { message: { content: that.options.labels.connectedTo + ' ' + that.options.room }, cls: 'ozchat-system' } );
 
-                ozchat.subscribe( 'my-app', that.options.room, function ( e ) {
+                ozchat.subscribe( that.options.app, that.options.room, function ( e ) {
 
-                    console.log(that.options.room);
-                    console.log(e);
-                    appendMessage( { content: JSON.parse(e.body).content } );
+                    // console.log(e);
+
+                    var message = JSON.parse(e.body);
+
+                    if ( undefined !== message.type ) {
+                        // It's a command.
+                        execute( message );
+                    } else {
+                        // It's a message.
+                        appendMessage( { message: message } );
+                    }
 
                 } );
             } );

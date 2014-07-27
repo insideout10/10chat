@@ -30,6 +30,9 @@ require_once( 'admin/chat_admin_settings.php' );
 // Add admin ajax functions.
 require_once( 'admin/ajax/chat_admin_ajax_rooms.php' );
 
+// Add admin messages functions.
+require_once( 'admin/ajax/chat_admin_ajax_messages.php' );
+
 
 /**
  * Change *plugins_url* response to return the correct path of 10chat files when working in development mode.
