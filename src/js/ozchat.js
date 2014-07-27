@@ -218,6 +218,9 @@ jQuery( function ( $ ) {
                     case 'DELETE':
                         $readmessages.children( '#ozchat-message-' + command.payload).remove();
                         break;
+                    case 'JOINED':
+                        $readmessages.append( '<p class="ozchat-system">' + command.payload + ' joined the room...</p>');
+                        break;
                     default:
                         alert('unknown command: ' + command.type);
                 }
