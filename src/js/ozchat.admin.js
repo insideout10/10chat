@@ -73,7 +73,7 @@ angular.module( 'ozchat', [] )
              *
              * @param callback A function to call when data is received from the server.
              */
-            list  : function( callback ) { ApiService.get( endPoints.rooms, callback ); },
+            list  : function( page, size, callback ) { ApiService.get( endPoints.rooms + '&p=' + encodeURIComponent( '?page=' + page + '&size=' + size ), callback ); },
 
             /**
              * Create a new room.
@@ -124,7 +124,7 @@ angular.module( 'ozchat', [] )
         $scope.rooms   = [];
 
         // The current page and the default page size.
-        $scope.page = 0
+        $scope.page = 0;
         $scope.size = 10;
 
         /**

@@ -43,20 +43,14 @@ function ioch_admin_options_page() {
 
 
     // Add scripts.
-    $token = ioch_api_token();  // Get an authentication token.
     wp_enqueue_script( 'angular-js', plugin_dir_url( __FILE__ ) . 'js/angular.min.js' );
     wp_enqueue_script( 'ozchat-admin-js', plugin_dir_url( __FILE__ ) . 'js/ozchat.admin.js' );
     wp_localize_script( 'ozchat-admin-js', 'ozchat_admin_options', array(
-        'chat' => array(
-            'server_url' => ioch_get_option( IOCH_SETTINGS_SERVER_URL )
-        ),
         'server_url' => admin_url( 'admin-ajax.php' ),
         'end_points' => array(
             'rooms'    => '?action=ioch_rooms',
             'messages' => '?action=ioch_messages'
         ),
-        'token' => $token->token,
-        'app'   => $token->appName
     ) );
 
 ?>

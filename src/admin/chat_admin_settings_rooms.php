@@ -12,6 +12,15 @@ function ioch_admin_settings_rooms_section_callback() {
     wp_enqueue_script( 'angular-js', plugin_dir_url( __FILE__ ) . 'js/angular.min.js' );
     wp_enqueue_script( 'ozchat-js', plugin_dir_url( __FILE__ ) . 'js/ozchat.js', array( 'jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-draggable', 'jquery-ui-resizable' ) );
 
+    $token = ioch_api_token();  // Get an authentication token.
+    wp_localize_script( 'ozchat-js', 'ozchat_options', array(
+        'chat' => array(
+            'server_url' => ioch_get_option( IOCH_SETTINGS_SERVER_URL )
+        ),
+        'token' => $token->token,
+        'app'   => $token->appName
+    ) );
+
     // Set the labels.
     $label_name_h      = esc_html__( 'Name', IOCH_LANGUAGE_DOMAIN );
     $label_open_h      = esc_html__( 'Open', IOCH_LANGUAGE_DOMAIN );
