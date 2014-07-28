@@ -214,13 +214,38 @@ jQuery( function ( $ ) {
              * @param command
              */
             var execute = function( command ) {
+
                 switch (command.type) {
+                    case 'MESSAGE':
+                    case 'REPLACE':
+
+                        // Get the message data.
+                        var id      = command.payload.id;
+                        var from    = command.payload.from;
+                        var content = command.payload.content;
+
+                        // Prepare the message HTML.
+                        var html    =
+                            '<span class="ozchat-message-from">[' + from + ']</span>' +
+                            '<span class="ozchat-message-content">' + content + '</span>';
+
+
+                        // Append or replace the message accordingly.
+                        if ( 'MESSAGE' === command.type )
+                            $readmessages.append( '<p id="ozchat-message-' + id + '" class="ozchat-message">' + html + '</p>' );
+                        else
+                            $( '#ozchat-message-' + id).html( html );
+
+                        break;
+
                     case 'DELETE':
                         $readmessages.children( '#ozchat-message-' + command.payload).remove();
                         break;
-                    case 'JOINED':
+
+                    case 'JOIN':
                         $readmessages.append( '<p class="ozchat-system">' + command.payload + ' joined the room...</p>');
                         break;
+
                     default:
                         alert('unknown command: ' + command.type);
                 }

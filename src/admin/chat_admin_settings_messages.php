@@ -5,12 +5,13 @@
 function ioch_admin_settings_messages_section_callback() {
 
     // Set the labels.
-    $label_from_h    = esc_html__( 'From', IOCH_LANGUAGE_DOMAIN );
-    $label_content_h = esc_html__( 'Content', IOCH_LANGUAGE_DOMAIN );
-    $label_sent_h    = esc_html__( 'Sent', IOCH_LANGUAGE_DOMAIN );
-    $label_room_h    = esc_html__( 'Room', IOCH_LANGUAGE_DOMAIN );
-    $label_delete_h    = esc_html__( 'Delete', IOCH_LANGUAGE_DOMAIN );
-    $label_save_h    = esc_html__( 'Save', IOCH_LANGUAGE_DOMAIN );
+    $label_from_h     = esc_html__( 'From', IOCH_LANGUAGE_DOMAIN );
+    $label_content_h  = esc_html__( 'Content', IOCH_LANGUAGE_DOMAIN );
+    $label_sent_h     = esc_html__( 'Sent', IOCH_LANGUAGE_DOMAIN );
+    $label_room_h     = esc_html__( 'Room', IOCH_LANGUAGE_DOMAIN );
+    $label_delete_h   = esc_html__( 'Delete', IOCH_LANGUAGE_DOMAIN );
+    $label_save_h     = esc_html__( 'Save', IOCH_LANGUAGE_DOMAIN );
+    $label_approved_h = esc_html__( 'Approved', IOCH_LANGUAGE_DOMAIN );
 
     ?>
 
@@ -19,6 +20,7 @@ function ioch_admin_settings_messages_section_callback() {
         <th scope="col" class="manage-column"><?php echo $label_room_h; ?></th>
         <th scope="col" class="manage-column"><?php echo $label_from_h; ?></th>
         <th scope="col" class="manage-column"><?php echo $label_content_h; ?></th>
+        <th scope="col" class="manage-column"><?php echo $label_approved_h; ?></th>
         <th scope="col" class="manage-column"><?php echo $label_sent_h; ?></th>
         </thead>
 
@@ -26,6 +28,7 @@ function ioch_admin_settings_messages_section_callback() {
         <th scope="col" class="manage-column"><?php echo $label_room_h; ?></th>
         <th scope="col" class="manage-column"><?php echo $label_from_h; ?></th>
         <th scope="col" class="manage-column"><?php echo $label_content_h; ?></th>
+        <th scope="col" class="manage-column"><?php echo $label_approved_h; ?></th>
         <th scope="col" class="manage-column"><?php echo $label_sent_h; ?></th>
         </tfoot>
 
@@ -40,7 +43,8 @@ function ioch_admin_settings_messages_section_callback() {
         <tr ng-class="$even ? 'alternate' : ''" ng-repeat="message in messages">
             <td ng-bind="message.roomName"></td>
             <td ng-bind="message.from"></td>
-            <td ng-bind="message.content"></td>
+            <td><input type="text" ng-model="message.content" name="content" /></td>
+            <td><input type="checkbox" ng-model="message.accepted"></td>
             <td>
                 <div ng-bind="message.created | date : 'short'"></div>
                 <button type="button" ng-click="kill(message);" class="button-primary delete alignright"><?php echo $label_delete_h; ?></button>
