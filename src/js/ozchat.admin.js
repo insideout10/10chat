@@ -97,7 +97,7 @@ angular.module( 'ozchat', [] )
              *
              * @param callback A function to call when data is received from the server.
              */
-            list  : function( callback ) { ApiService.get( endPoints.messages, callback ); },
+            list  : function( page, size, callback ) { ApiService.get( endPoints.messages + '&p=' + encodeURIComponent( '?page=' + page + '&size=' + size ), callback ); },
 
             /**
              * Delete the specified message.
@@ -123,10 +123,14 @@ angular.module( 'ozchat', [] )
         // Initialize the scope.
         $scope.rooms   = [];
 
+        // The current page and the default page size.
+        $scope.page = 0
+        $scope.size = 10;
+
         /**
          * Refresh the list of rooms.
          */
-        $scope.refresh = function() { RoomService.list( function( data ) { $scope.rooms = data.content; } ); };
+        $scope.refresh = function() { RoomService.list( $scope.page, $scope.size, function( data ) { $scope.rooms = data.content; } ); };
 
         /**
          * Create a new Room using the provided data. The scope is refreshed when the response is received from the
@@ -151,12 +155,20 @@ angular.module( 'ozchat', [] )
     } ] )
     .controller( 'MessageController', [ 'MessageService', '$scope', function( MessageService, $scope ) {
 
-        $scope.messages = [];
+        $scope.data    = [];
+
+        // The current page and the default page size.
+        $scope.page        = 0;
+        $scope.size        = 10;
+        $scope.currentPage = 1;
 
         /**
          * Refresh the list of messages.
          */
-        $scope.refresh = function() { MessageService.list( function ( data ) { $scope.messages = data.content } ); }
+        $scope.refresh = function() { MessageService.list( $scope.page, $scope.size, function ( data ) {
+            $scope.data        = data;
+            $scope.currentPage = data.number + 1;
+        } ); }
 
         /**
          * Delete the specified message.
@@ -171,6 +183,22 @@ angular.module( 'ozchat', [] )
          * @param message
          */
         $scope.update = function( message ) { MessageService.update( message, function( data ) { $scope.refresh(); } ); };
+
+        /**
+         * Go to the specified page.
+         *
+         * @param page The page to go to.
+         */
+        $scope.goToPage = function( page ) {
+
+            // Check that we are in a valid range.
+            if ( 0 > page || $scope.data.totalPages <= page ) {
+                return;
+            }
+
+            $scope.page = page;
+            $scope.refresh();
+        };
 
         $scope.refresh();
 

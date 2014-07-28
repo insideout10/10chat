@@ -3,9 +3,9 @@
 jQuery( function ( $ ) {
 
     // Connect.
-    var serverURL = ozchat_admin_options.chat.server_url;
-    var token     = ozchat_admin_options.token;
-    var appName   = ozchat_admin_options.app;
+    var serverURL = ozchat_options.chat.server_url;
+    var token     = ozchat_options.token;
+    var appName   = ozchat_options.app;
 
 
     // Create the ozchat channel if it's not yet created.

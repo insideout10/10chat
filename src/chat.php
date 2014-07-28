@@ -24,6 +24,9 @@ require_once( 'chat_api.php' );
 // Add ajax authenticate method.
 require_once( 'ajax/chat_ajax_authenticate.php' );
 
+// Add the *ozchat* shortcode.
+require_once( 'shortcodes/chat_shortcode_ozchat.php' );
+
 // Admin files.
 require_once( 'admin/chat_admin_settings.php' );
 
