@@ -232,7 +232,9 @@ jQuery( function ( $ ) {
 
                         // Append or replace the message accordingly.
                         if ( 'MESSAGE' === command.type )
-                            $readmessages.append( '<p id="ozchat-message-' + id + '" class="ozchat-message">' + html + '</p>' );
+                            $readmessages
+                                .append( '<p id="ozchat-message-' + id + '" class="ozchat-message">' + html + '</p>' )
+                                .scrollTop( $messages[0].scrollHeight );
                         else
                             $( '#ozchat-message-' + id).html( html );
 
