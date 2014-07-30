@@ -153,15 +153,15 @@ jQuery( function ( $ ) {
             // Hook to the CTRL+Enter key of the text area.
             $textarea.keypress( function ( e ) {
 
-                if ( ! e.ctrlKey ||  13 !== e.which || '' === $(e.target).val() ) {
-                    return;
+                if ( 13 === e.which && ! e.ctrlKey && '' !== $(e.target).val() ) {
+
+                    // Get the element, send the content using the *ozchat* reference.
+                    ozchat.send( $(e.target).val(), that.options.app, that.options.room );
+                    $(e.target).val('');
+
+                    e.preventDefault();
+
                 }
-
-                // Get the element, send the content using the *ozchat* reference.
-                ozchat.send( $(e.target).val(), that.options.app, that.options.room );
-                $(e.target).val('');
-
-                e.preventDefault();
 
             });
 
@@ -198,7 +198,7 @@ jQuery( function ( $ ) {
                     .append( '<p id="ozchat-message-' + id + '" class="' + cls +  '">' +
                         ( undefined !== params.message.from ? '<span class="ozchat-message-from">[' + params.message.from + ']</span>' : '' ) +
                         '<span class="ozchat-message-content">' + content + '</span></p>' )
-                    .scrollTop( $messages[0].scrollHeight );
+                    .scrollTop( $readmessages[0].scrollHeight );
 
                 // Update the notifier if the panel has no focus.
                 if ( ! $container.hasClass( 'expand' ) && 'ozchat-system' !== params.cls ) {
@@ -234,7 +234,7 @@ jQuery( function ( $ ) {
                         if ( 'MESSAGE' === command.type )
                             $readmessages
                                 .append( '<p id="ozchat-message-' + id + '" class="ozchat-message">' + html + '</p>' )
-                                .scrollTop( $messages[0].scrollHeight );
+                                .scrollTop( $readmessages[0].scrollHeight );
                         else
                             $( '#ozchat-message-' + id).html( html );
 
@@ -245,7 +245,9 @@ jQuery( function ( $ ) {
                         break;
 
                     case 'JOIN':
-                        $readmessages.append( '<p class="ozchat-system">' + command.payload + ' joined the room...</p>');
+                        $readmessages
+                            .append( '<p class="ozchat-system">' + command.payload + ' joined the room...</p>')
+                            .scrollTop( $readmessages[0].scrollHeight );
                         break;
 
                     default:
