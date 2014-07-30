@@ -47,10 +47,11 @@ require_once( 'admin/ajax/chat_admin_ajax_messages.php' );
  */
 function ioch_plugins_url( $url, $path, $plugin )
 {
-    ioch_write_log(
-        "ioch_plugins_url [ url :: {url} ][ path :: {path} ][ plugin :: {plugin} ]",
-        array( 'url' => $url, 'path' => $path, 'plugin' => $plugin )
-    );
+
+//    ioch_write_log(
+//        "ioch_plugins_url [ url :: {url} ][ path :: {path} ][ plugin :: {plugin} ]",
+//        array( 'url' => $url, 'path' => $path, 'plugin' => $plugin )
+//    );
 
     // Check if it's our pages calling the plugins_url.
     if ( 1 !== preg_match( '/\/chat_[^.]*.php$/i', $plugin ) ) {
@@ -60,10 +61,10 @@ function ioch_plugins_url( $url, $path, $plugin )
     // Set the URL to plugins URL + helixware, in order to support the plugin being symbolic linked.
     $plugin_url = plugins_url() . '/10chat/' . $path;
 
-    ioch_write_log(
-        'ioch_plugins_url [ match :: yes ][ plugin url :: {plugin-url} ][ url :: {url} ][ path :: {path} ][ plugin :: {plugin} ]',
-        array( 'plugin-url', $plugin_url, 'url' => $url, 'path' => $path, 'plugin' => $plugin )
-    );
+//    ioch_write_log(
+//        'ioch_plugins_url [ match :: yes ][ plugin url :: {plugin-url} ][ url :: {url} ][ path :: {path} ][ plugin :: {plugin} ]',
+//        array( 'plugin-url', $plugin_url, 'url' => $url, 'path' => $path, 'plugin' => $plugin )
+//    );
 
     return $plugin_url;
 }
