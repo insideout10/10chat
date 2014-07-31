@@ -113,7 +113,10 @@ angular.module( 'ozchat', [] )
              * @param message The message to update.
              * @param callback The callback to call after the operation completes.
              */
-            update: function( message, callback ) { ApiService.update( endPoints.messages + '&p=' + message.id, message, callback ); }
+            update: function( message, callback ) {
+                delete message.roomName;
+                ApiService.update( endPoints.messages + '&p=' + message.id, message, callback );
+            }
 
         }
 
