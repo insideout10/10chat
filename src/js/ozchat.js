@@ -204,7 +204,10 @@ jQuery( function ( $ ) {
 
                 $readmessages
                     .append( '<p id="ozchat-message-' + id + '" class="' + cls +  '">' +
-                        ( undefined !== params.message.from ? '<span class="ozchat-message-from">[' + params.message.from + ']</span>' : '' ) +
+                        ( undefined !== params.message.from ?
+                            '<span class="ozchat-message-from"><span class="ozchat-message-from">' +
+                                params.message.from + '</span></span>' : ''
+                        ) +
                         '<span class="ozchat-message-content">' + content + '</span></p>' )
                     .scrollTop( $readmessages[0].scrollHeight );
 
