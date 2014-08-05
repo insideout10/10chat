@@ -6,6 +6,7 @@ jQuery( function ( $ ) {
     var serverURL = ozchat_options.chat.server_url;
     var token     = ozchat_options.token;
     var appName   = ozchat_options.app;
+    var debug     = ozchat_options.debug;
 
 
     // Create the ozchat channel if it's not yet created.
@@ -27,14 +28,21 @@ jQuery( function ( $ ) {
 
             // We're already connected, fire the callback right away.
             if ( ozchat.connected ) {
+
+                // Increase the number of connections, fire the callback and exit.
                 ozchat.connections++;
-                return callback();
+                callback(); return;
+
             }
 
-            var socket = new SockJS( serverURL + '/auth/' + token, {}, {
-//                protocols_whitelist: ['xhr-polling']
-            });
-            ozchat.client = Stomp.over(socket);
+            var socket = new SockJS( serverURL + '/auth/' + token);
+            ozchat.client = Stomp.over( socket );
+
+            // Enable debug.
+            if ( debug && console ) {
+                ozchat.client.debug = function( message ) {  console.log( message + '\n' ); };
+            }
+
             ozchat.client.connect( {}, function ( frame ) {
 
                 // Set the first connection.
@@ -45,7 +53,7 @@ jQuery( function ( $ ) {
 
             });
 
-        }
+        };
 
         /**
          * Subscribe a callback function to an app/room.
