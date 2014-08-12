@@ -3,7 +3,24 @@
  */
 
 function ioch_admin_settings_messages_section_callback() {
+    
+    // Load js
+    $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+    wp_enqueue_script( 'sockjs-js', plugin_dir_url( __FILE__ ) . "js/sockjs-0.3.4$suffix.js" );
+    wp_enqueue_script( 'stomp-js', plugin_dir_url( __FILE__ ) . "js/stomp$suffix.js" );
+    wp_enqueue_script( 'ozchat-js', plugin_dir_url( __FILE__ ) . 'js/ozchat.js', array( 'jquery-ui-core', 'jquery-ui-widget' ) );
+    wp_enqueue_script( 'ozchat-admin-js-messages', plugin_dir_url( __FILE__ ) . 'js/ozchat.admin.messages.js' );
+    
+    $token = ioch_api_token();  // Get an authentication token.
+    wp_localize_script( 'ozchat-js', 'ozchat_options', array(
+        'chat' => array(
+            'server_url' => ioch_get_option( IOCH_SETTINGS_SERVER_URL )
+        ),
+        'token' => $token->token,
+        'app'   => $token->appName
+    ) );
 
+    
     // Set the labels.
     $label_from_h     = esc_html__( 'From', IOCH_LANGUAGE_DOMAIN );
     $label_content_h  = esc_html__( 'Content', IOCH_LANGUAGE_DOMAIN );
