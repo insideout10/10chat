@@ -22,7 +22,7 @@ define( 'IOCH_OPTIONS_SETTINGS_MESSAGES', 'ioch_options_settings_messages' );
 define( 'IOCH_API_HTTP_OPTIONS', serialize( array(
     'timeout' => 300,
     'redirection' => 5,
-    'httpversion' => '1.0',
+    'httpversion' => '1.1',
     'blocking' => true,
     'cookies' => array(),
     'sslverify' => ( defined( WP_DEBUG ) ? !WP_DEBUG : true ) // disable sslverify if DEBUG is on.
