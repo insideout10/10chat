@@ -43,7 +43,7 @@ function ioch_api_call( $endpoint, $method = 'GET', $body = '', $content_type = 
     $response = wp_remote_request( $url, $args );
 
     // If an error occurs, print the error and exit.
-    if ( is_wp_error( $response ) || 200 !== $response['response']['code'] ) {
+    if ( is_wp_error( $response ) || 200 !== (int)$response['response']['code'] ) {
 
         ioch_write_log(
             'An error occurred while calling the remote server ( ' .
