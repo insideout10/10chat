@@ -239,7 +239,7 @@ jQuery( function ( $ ) {
                         // Prepare the message HTML.
                         var html    =
 							   '<span class="ozchat-image"><img src="./wp-content/themes/3clicks-child-theme/images/chat-icon-1.jpg"/></span>' +
-                            '<span class="ozchat-content"><span class="ozchat-message-from">' + from + ' da </span>' + '<span class="city">Roma</span><span class="ozchat-message-content">' + content + '</span></span>';
+                            '<span class="ozchat-content"><span class="ozchat-message-from">' + from + '</span><span class="ozchat-message-content">' + content + '</span></span>';
 
 
                         // Append or replace the message accordingly.

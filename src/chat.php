@@ -9,6 +9,9 @@
  * License: GPL
  */
 
+! defined( 'OZCHAT_PUBLIC_CSS_URL' ) || define( 'OZCHAT_PUBLIC_CSS_URL', plugin_dir_url( __FILE__ ) . 'css/10chat.css' );
+! defined( 'OZCHAT_PUBLIC_JS_URL' ) || define( 'OZCHAT_PUBLIC_JS_URL', plugin_dir_url( __FILE__ ) . 'js/ozchat.js' );
+
 // Add constants.
 require_once( 'chat_constants.php' );
 
@@ -40,56 +43,57 @@ require_once( 'admin/ajax/chat_admin_ajax_messages.php' );
 /**
  * Change *plugins_url* response to return the correct path of 10chat files when working in development mode.
  *
- * @param string $url    The URL as set by the plugins_url method.
- * @param string $path   The request path.
+ * @param string $url The URL as set by the plugins_url method.
+ * @param string $path The request path.
  * @param string $plugin The plugin folder.
+ *
  * @return string The URL.
  */
-function ioch_plugins_url( $url, $path, $plugin )
-{
+function ioch_plugins_url( $url, $path, $plugin ) {
 
 //    ioch_write_log(
 //        "ioch_plugins_url [ url :: {url} ][ path :: {path} ][ plugin :: {plugin} ]",
 //        array( 'url' => $url, 'path' => $path, 'plugin' => $plugin )
 //    );
 
-    // Check if it's our pages calling the plugins_url.
-    if ( 1 !== preg_match( '/\/chat_[^.]*.php$/i', $plugin ) ) {
-        return $url;
-    };
+	// Check if it's our pages calling the plugins_url.
+	if ( 1 !== preg_match( '/\/chat_[^.]*.php$/i', $plugin ) ) {
+		return $url;
+	};
 
-    // Set the URL to plugins URL + helixware, in order to support the plugin being symbolic linked.
-    $plugin_url = plugins_url() . '/10chat/' . $path;
+	// Set the URL to plugins URL + helixware, in order to support the plugin being symbolic linked.
+	$plugin_url = plugins_url() . '/10chat/' . $path;
 
 //    ioch_write_log(
 //        'ioch_plugins_url [ match :: yes ][ plugin url :: {plugin-url} ][ url :: {url} ][ path :: {path} ][ plugin :: {plugin} ]',
 //        array( 'plugin-url', $plugin_url, 'url' => $url, 'path' => $path, 'plugin' => $plugin )
 //    );
 
-    return $plugin_url;
+	return $plugin_url;
 }
+
 add_filter( 'plugins_url', 'ioch_plugins_url', 10, 3 );
 
 
 function ioch_init() {
 
-    // Enqueue the scripts.
-    wp_enqueue_script( 'sockjs', plugin_dir_url( __FILE__ ) . 'js/sockjs-0.3.4.js' );
-    wp_enqueue_script( 'stomp', plugin_dir_url( __FILE__ ) . 'js/stomp.min.js' );
-    wp_enqueue_script( 'ozchat-js', plugin_dir_url( __FILE__ ) . 'js/10chat.js', array( 'jquery-ui-draggable' ) );
-    wp_enqueue_style( 'ozchat-css', plugin_dir_url( __FILE__ ) . 'css/10chat.css' );
+	// Enqueue the scripts.
+	wp_enqueue_script( 'sockjs', plugin_dir_url( __FILE__ ) . 'js/sockjs-0.3.4.js' );
+	wp_enqueue_script( 'stomp', plugin_dir_url( __FILE__ ) . 'js/stomp.min.js' );
+	wp_enqueue_script( 'ozchat-js', plugin_dir_url( __FILE__ ) . 'js/10chat.js', array( 'jquery-ui-draggable' ) );
+	wp_enqueue_style( 'ozchat-css', plugin_dir_url( __FILE__ ) . 'css/10chat.css' );
 
 
-    $user    = wp_get_current_user();
+	$user = wp_get_current_user();
 
-    wp_localize_script( 'ozchat-js', 'ioch_options', array(
-        'server_url' => ioch_get_option( IOCH_SETTINGS_SERVER_URL ),
-        'user'       => array(
-            'username'    => $user->user_login,
-            'displayName' => $user->display_name,
-            'roles'       => $user->roles
-        )
-    ) );
+	wp_localize_script( 'ozchat-js', 'ioch_options', array(
+		'server_url' => ioch_get_option( IOCH_SETTINGS_SERVER_URL ),
+		'user'       => array(
+			'username'    => $user->user_login,
+			'displayName' => $user->display_name,
+			'roles'       => $user->roles
+		)
+	) );
 
 }
 //add_action( 'wp_head', 'ioch_init' );
