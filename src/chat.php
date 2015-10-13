@@ -3,7 +3,7 @@
  * Plugin Name: 10chat
  * Plugin URI: http://insideout.io
  * Description: Engage your community with WordPress Chat!
- * Version: 1.0.0-SNAPSHOT
+ * Version: 1.0.1-dev
  * Author: InsideOut10
  * Author URI: http://insideout.io
  * License: GPL
