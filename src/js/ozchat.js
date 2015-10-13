@@ -66,7 +66,7 @@ jQuery( function ( $ ) {
 
             ozchat.client.subscribe( '/out/' + app + '/' + room, callback );
 
-        }
+        };
 
         /**
          * Send the specified content to the specified room.
@@ -77,7 +77,7 @@ jQuery( function ( $ ) {
          */
         ozchat.send = function ( content, app, room ) {
             ozchat.client.send( '/in/' + app + '/' + room, {}, JSON.stringify( { 'content': content } ) );
-        }
+        };
 
         window.ozchat = ozchat;
 
