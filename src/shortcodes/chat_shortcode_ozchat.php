@@ -55,7 +55,7 @@ function ioch_shortcode_ozchat_footer() {
 
         foreach ( $ioch_shortcode_rooms as $room ) {
             $room_j = json_encode( $room );
-            echo "$( '<div></div>' ).appendTo( 'body' ).ozchat( { room: $room_j } );";
+            echo "$( '<div></div>' ).appendTo( '.chat-container' ).ozchat( { room: $room_j } );";
         }
 
         echo '} );</script>';
