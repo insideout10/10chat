@@ -1,0 +1,158 @@
+.ozchat-container {
+   /* position: fixed;
+    right: 155px;
+    top: 10px;*/
+    z-index: 999999;
+    width: 100%;
+	margin-bottom:20px;
+}
+
+.ozchat-container .ozchat-chat {	
+	display:none;
+}
+
+.ozchat-container .ozchat-messages .ozchat-read-messages {
+  padding: 4px;
+  overflow: auto;
+  height:242px;
+}
+
+.ozchat-container .ozchat-messages {
+  display: block;
+  width: 100%;
+  background: #e1e1e1;
+  border: 1px solid gray;
+  margin-top: 10px;
+  position: relative;
+  overflow: hidden;
+  height: 300px;
+   /* box-shadow: 0px 5px 5px gray;*/
+}
+
+.ozchat-container .ozchat-messages {
+    display: block;
+    width: 100%;
+    background: #e1e1e1;
+    border: 1px solid gray;
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+    height: 360px;
+}
+
+.ozchat-container .ozchat-messages .ozchat-read-messages {
+    padding: 4px;
+    overflow: auto;
+    /*position: absolute;
+    bottom: 70px;
+    top: 4px;
+    right: 4px;
+    left: 4px;*/
+}
+
+.ozchat-container .ozchat-messages .ozchat-read-messages p {
+    margin: 0 0 2px 0;
+}
+
+.ozchat-container .ozchat-messages .ozchat-read-messages p.ozchat-system {
+    color: #000;
+    font-style: italic;
+    font-size: 10px;
+}
+
+.ozchat-container .ozchat-textbox {
+    position: absolute;
+    left: 0px;
+    bottom: 0;
+    right: 60px;
+    height: 60px;
+    padding: 0;
+}
+
+.ozchat-container .ozchat-submit {
+    position: absolute;
+    bottom: 0;
+    right: 0px;
+    width: 60px;
+    height: 60px;
+}
+
+.ozchat-container .ozchat-textbox textarea {
+    width: 100%;
+    height: 100%;
+    resize: none;
+}
+
+.ozchat-container .ozchat-submit button {
+    width: 60px;
+    border-radius: 0;
+    border: 1px solid gray;
+    margin: 0 ;
+    height: 60px;
+	padding:0;
+	color:#ffffff;
+	background-color:#ff0019;
+}
+
+.ozchat-chat {
+    width: 50px;
+    height: 50px;
+    background: white;
+    display: block;
+    border-radius: 50%;
+    border: 1px solid gray;
+    cursor: pointer;
+    margin-left: 140px;
+    position: relative;
+}
+
+.ozchat-container .ozchat-chat .ozchat-notifier {
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 50%;
+    font-size: 12px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    line-height: 20px;
+    margin: 30px;
+    display: none;
+}
+
+.ozchat-open-chat {
+    cursor: pointer;
+}
+
+.ozchat-container .ozchat-messages .ozchat-read-messages .ozchat-message-from {
+    font-style: italic;
+    color: gray;
+}
+
+.ozchat-container .ozchat-chat .ozchat-room-name {
+    background: #bfbfbf;
+    width: auto;
+    white-space: nowrap;
+    border-radius: 2px;
+    position: absolute;
+    top: 4px;
+    padding: 0 4px;
+    font-weight: bold;
+}
+.chat-container {line-height:1.5em}
+.ozchat-textbox textarea {border-radius:0; border-width:thin; margin:0; padding:0;}
+
+.ozchat-title {background-color:#ff0019; color:#ffffff; font-size:16px; font-weight:bold; height:20px; padding:10px;}
+.ozchat-image {display:block; float:left; width:15%;}
+.ozchat-message {clear:both;   
+  clear: both;
+  border-top: 1px solid #cccccc;
+  padding: 10px 0;
+  margin-top:7px;}
+.ozchat-message-content {clear:both; display:block}
+.ozchat-content {float:left; margin-left:5%; width:80%;}
+
+.ozchat-container .ozchat-messages .ozchat-read-messages .ozchat-message-from{font-weight:bold; color:#000;}
+.city{ font-weight:bold; color:#ff0019;}
+
+
